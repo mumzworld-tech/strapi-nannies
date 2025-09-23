@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_content_package_group_items",
+  "info": {
+    "displayName": "PackageGroupItem"
+  },
+  "options": {},
+  "attributes": {
+    "hours": {
+      "type": "integer",
+      "required": true,
+      "unique": false
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "unique": false,
+      "min": 0
+    }
+  },
+  "config": {}
+}

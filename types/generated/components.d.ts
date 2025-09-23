@@ -1,75 +1,108 @@
-import type { Struct, Schema } from '@strapi/strapi';
+import type { Schema, Struct } from '@strapi/strapi';
 
-export interface SharedSlider extends Struct.ComponentSchema {
-  collectionName: 'components_shared_sliders';
+export interface ContentCheckedList extends Struct.ComponentSchema {
+  collectionName: 'components_content_checked_lists';
   info: {
-    displayName: 'Slider';
-    icon: 'address-book';
-    description: '';
+    displayName: 'CheckedList';
   };
   attributes: {
-    files: Schema.Attribute.Media<'images', true>;
-  };
-}
-
-export interface SharedSeo extends Struct.ComponentSchema {
-  collectionName: 'components_shared_seos';
-  info: {
-    name: 'Seo';
-    icon: 'allergies';
-    displayName: 'Seo';
-    description: '';
-  };
-  attributes: {
-    metaTitle: Schema.Attribute.String & Schema.Attribute.Required;
-    metaDescription: Schema.Attribute.Text & Schema.Attribute.Required;
-    shareImage: Schema.Attribute.Media<'images'>;
-  };
-}
-
-export interface SharedRichText extends Struct.ComponentSchema {
-  collectionName: 'components_shared_rich_texts';
-  info: {
-    displayName: 'Rich text';
-    icon: 'align-justify';
-    description: '';
-  };
-  attributes: {
-    body: Schema.Attribute.RichText;
-  };
-}
-
-export interface SharedQuote extends Struct.ComponentSchema {
-  collectionName: 'components_shared_quotes';
-  info: {
-    displayName: 'Quote';
-    icon: 'indent';
-  };
-  attributes: {
+    items: Schema.Attribute.Component<'content.list', true>;
     title: Schema.Attribute.String;
-    body: Schema.Attribute.Text;
   };
 }
 
-export interface SharedMedia extends Struct.ComponentSchema {
-  collectionName: 'components_shared_media';
+export interface ContentGallery extends Struct.ComponentSchema {
+  collectionName: 'components_content_galleries';
   info: {
-    displayName: 'Media';
-    icon: 'file-video';
+    displayName: 'Gallery';
   };
   attributes: {
-    file: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
+    file: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    position: Schema.Attribute.Integer;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface ContentList extends Struct.ComponentSchema {
+  collectionName: 'components_content_lists';
+  info: {
+    displayName: 'List';
+  };
+  attributes: {
+    label: Schema.Attribute.String;
+  };
+}
+
+export interface ContentOverview extends Struct.ComponentSchema {
+  collectionName: 'components_content_overviews';
+  info: {
+    displayName: 'Overview';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface ContentPackageGroup extends Struct.ComponentSchema {
+  collectionName: 'components_content_package_groups';
+  info: {
+    displayName: 'PackageGroup';
+  };
+  attributes: {
+    items: Schema.Attribute.Component<'content.package-group-item', true>;
+    noOfDays: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 7;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1>;
+  };
+}
+
+export interface ContentPackageGroupItem extends Struct.ComponentSchema {
+  collectionName: 'components_content_package_group_items';
+  info: {
+    displayName: 'PackageGroupItem';
+  };
+  attributes: {
+    hours: Schema.Attribute.Integer & Schema.Attribute.Required;
+    price: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+  };
+}
+
+export interface ContentTimeRange extends Struct.ComponentSchema {
+  collectionName: 'components_content_time_ranges';
+  info: {
+    displayName: 'TimeRange';
+  };
+  attributes: {
+    endTime: Schema.Attribute.String & Schema.Attribute.Required;
+    startTime: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
-      'shared.slider': SharedSlider;
-      'shared.seo': SharedSeo;
-      'shared.rich-text': SharedRichText;
-      'shared.quote': SharedQuote;
-      'shared.media': SharedMedia;
+      'content.checked-list': ContentCheckedList;
+      'content.gallery': ContentGallery;
+      'content.list': ContentList;
+      'content.overview': ContentOverview;
+      'content.package-group': ContentPackageGroup;
+      'content.package-group-item': ContentPackageGroupItem;
+      'content.time-range': ContentTimeRange;
     }
   }
 }

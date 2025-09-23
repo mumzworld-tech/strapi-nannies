@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_content_time_ranges",
+  "info": {
+    "displayName": "TimeRange"
+  },
+  "options": {},
+  "attributes": {
+    "startTime": {
+      "type": "string",
+      "required": true
+    },
+    "endTime": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}

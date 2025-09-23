@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "packages",
+  "info": {
+    "singularName": "package",
+    "pluralName": "packages",
+    "displayName": "Package"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "day",
+        "week",
+        "month"
+      ]
+    },
+    "groups": {
+      "type": "component",
+      "component": "content.package-group",
+      "repeatable": true
+    },
+    "currencyCode": {
+      "type": "enumeration",
+      "enum": [
+        "AED",
+        "SAR"
+      ]
+    },
+    "position": {
+      "type": "integer",
+      "required": true,
+      "default": 1,
+      "min": 1
+    }
+  }
+}
