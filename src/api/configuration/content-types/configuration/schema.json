@@ -22,6 +22,11 @@
       "required": true,
       "default": 3,
       "min": 1
+    },
+    "noOfMonths": {
+      "type": "integer",
+      "required": true,
+      "default": 2
     }
   }
 }

@@ -451,6 +451,9 @@ export interface ApiConfigurationConfiguration extends Struct.SingleTypeSchema {
         number
       > &
       Schema.Attribute.DefaultTo<3>;
+    noOfMonths: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<2>;
     publishedAt: Schema.Attribute.DateTime;
     timeRange: Schema.Attribute.Component<'content.time-range', false> &
       Schema.Attribute.Required;
