@@ -11,6 +11,19 @@ export interface ContentCheckedList extends Struct.ComponentSchema {
   };
 }
 
+export interface ContentCustomer extends Struct.ComponentSchema {
+  collectionName: 'components_content_customers';
+  info: {
+    displayName: 'Customer';
+  };
+  attributes: {
+    countryCode: Schema.Attribute.String;
+    email: Schema.Attribute.Email;
+    fullName: Schema.Attribute.String;
+    phone: Schema.Attribute.String;
+  };
+}
+
 export interface ContentGallery extends Struct.ComponentSchema {
   collectionName: 'components_content_galleries';
   info: {
@@ -30,6 +43,19 @@ export interface ContentList extends Struct.ComponentSchema {
   };
   attributes: {
     label: Schema.Attribute.String;
+  };
+}
+
+export interface ContentLocation extends Struct.ComponentSchema {
+  collectionName: 'components_content_locations';
+  info: {
+    displayName: 'Location';
+  };
+  attributes: {
+    address: Schema.Attribute.Text;
+    area: Schema.Attribute.String;
+    city: Schema.Attribute.String;
+    country: Schema.Attribute.Enumeration<['United Arab Emirates']>;
   };
 }
 
@@ -97,8 +123,10 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'content.checked-list': ContentCheckedList;
+      'content.customer': ContentCustomer;
       'content.gallery': ContentGallery;
       'content.list': ContentList;
+      'content.location': ContentLocation;
       'content.overview': ContentOverview;
       'content.package-group': ContentPackageGroup;
       'content.package-group-item': ContentPackageGroupItem;

@@ -461,6 +461,37 @@ export interface ApiConfigurationConfiguration extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiCustomerCustomer extends Struct.CollectionTypeSchema {
+  collectionName: 'customers';
+  info: {
+    displayName: 'Customer';
+    pluralName: 'customers';
+    singularName: 'customer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    countryCode: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email;
+    fullName: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::customer.customer'
+    > &
+      Schema.Attribute.Private;
+    phone: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiDashboardDashboard extends Struct.SingleTypeSchema {
   collectionName: 'dashboards';
   info: {
@@ -746,6 +777,55 @@ export interface ApiNationalityNationality extends Struct.CollectionTypeSchema {
         };
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'orders';
+  info: {
+    displayName: 'Order';
+    pluralName: 'orders';
+    singularName: 'order';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    childAgeGroups: Schema.Attribute.Component<'content.list', true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currencyCode: Schema.Attribute.Enumeration<['AED', 'SAR']>;
+    customer: Schema.Attribute.Component<'content.customer', false>;
+    customerId: Schema.Attribute.Relation<'oneToOne', 'api::customer.customer'>;
+    date: Schema.Attribute.Date;
+    dayOfWeek: Schema.Attribute.Component<'content.list', true>;
+    hours: Schema.Attribute.Integer;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    locales: Schema.Attribute.Enumeration<['en', 'ar']> &
+      Schema.Attribute.DefaultTo<'en'>;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.Component<'content.location', false>;
+    noOfDays: Schema.Attribute.Integer;
+    noOfNannies: Schema.Attribute.Integer;
+    orderId: Schema.Attribute.String;
+    package: Schema.Attribute.Relation<'oneToOne', 'api::package.package'>;
+    paymentId: Schema.Attribute.String;
+    paymentStatus: Schema.Attribute.Enumeration<
+      ['pending', 'paid', 'refunded', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    price: Schema.Attribute.Decimal;
+    publishedAt: Schema.Attribute.DateTime;
+    responseId: Schema.Attribute.String;
+    smsConfirmationSent: Schema.Attribute.Boolean;
+    time: Schema.Attribute.Time;
+    total: Schema.Attribute.Decimal;
+    type: Schema.Attribute.Enumeration<['day', 'week', 'month']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1302,11 +1382,13 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::booking.booking': ApiBookingBooking;
       'api::configuration.configuration': ApiConfigurationConfiguration;
+      'api::customer.customer': ApiCustomerCustomer;
       'api::dashboard.dashboard': ApiDashboardDashboard;
       'api::faq.faq': ApiFaqFaq;
       'api::language.language': ApiLanguageLanguage;
       'api::nanny.nanny': ApiNannyNanny;
       'api::nationality.nationality': ApiNationalityNationality;
+      'api::order.order': ApiOrderOrder;
       'api::package.package': ApiPackagePackage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

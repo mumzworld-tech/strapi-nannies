@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_content_customers",
+  "info": {
+    "displayName": "Customer"
+  },
+  "options": {},
+  "attributes": {
+    "fullName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "countryCode": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

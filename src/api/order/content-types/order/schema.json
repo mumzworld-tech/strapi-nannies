@@ -1,0 +1,111 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "orderId": {
+      "type": "string"
+    },
+    "package": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::package.package"
+    },
+    "customer": {
+      "type": "component",
+      "component": "content.customer",
+      "repeatable": false
+    },
+    "location": {
+      "type": "component",
+      "component": "content.location",
+      "repeatable": false
+    },
+    "hours": {
+      "type": "integer"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "day",
+        "week",
+        "month"
+      ]
+    },
+    "noOfDays": {
+      "type": "integer"
+    },
+    "date": {
+      "type": "date"
+    },
+    "time": {
+      "type": "time"
+    },
+    "noOfNannies": {
+      "type": "integer"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "default": "pending",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded",
+        "failed"
+      ]
+    },
+    "paymentId": {
+      "type": "string"
+    },
+    "responseId": {
+      "type": "string"
+    },
+    "currencyCode": {
+      "type": "enumeration",
+      "enum": [
+        "AED",
+        "SAR"
+      ]
+    },
+    "dayOfWeek": {
+      "type": "component",
+      "component": "content.list",
+      "repeatable": true
+    },
+    "customerId": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::customer.customer"
+    },
+    "childAgeGroups": {
+      "type": "component",
+      "component": "content.list",
+      "repeatable": true
+    },
+    "locales": {
+      "type": "enumeration",
+      "default": "en",
+      "enum": [
+        "en",
+        "ar"
+      ]
+    },
+    "smsConfirmationSent": {
+      "type": "boolean"
+    }
+  }
+}
