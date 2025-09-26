@@ -446,7 +446,6 @@ export interface ApiConfigurationConfiguration extends Struct.SingleTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
-          max: 3;
           min: 1;
         },
         number
