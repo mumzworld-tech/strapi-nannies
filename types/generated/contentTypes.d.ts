@@ -796,6 +796,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    assignNanny: Schema.Attribute.Relation<'oneToOne', 'api::nanny.nanny'>;
     childAgeGroups: Schema.Attribute.Component<'content.list', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
