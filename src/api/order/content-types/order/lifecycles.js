@@ -102,6 +102,73 @@ module.exports = {
       },
     };
 
+    const internalEmailBody = {
+      en: {
+        subject: `New booking alert - Car Seat Cleaning`,
+        text: `
+            Hello Team,
+            A new booking has been successfully received and requires processing.
+
+            Booking Details:
+
+            Booking ID: ${orderId}
+
+            Service: Car Seat Cleaning
+
+            Customer Details:
+
+            Customer Name: ${customer.fullName}
+
+            Customer Email: ${customer.email}
+
+            Customer Phone: ${customer.Phone}
+
+            Please review and take the necessary next steps.
+
+            Thank you,
+
+            Mumzworld
+          `.trim(),
+        html: `
+          <html>
+            <body>
+              Hello Team,<br/><br/>
+              A new booking has been successfully received and requires processing.<br/><br/>
+
+              <b>Booking Details:</b>
+              <ul>
+                <li>
+                <b>Booking ID:</b> ${orderId}
+                </li>
+                <li>
+                <b>Service:</b> Nannies
+                </li>
+              </ul>
+
+              <b>Customer Details:</b>
+
+              <ul>
+                <li>
+                  <b>Customer Name:</b> ${customer.fullName}
+                </li>
+                <li>
+                  <b>Customer Email:</b> ${customer.email}
+                </li>
+                <li>
+                  <b>Customer Phone:</b> ${customer.countryCode}${customer.phone}
+                </li>
+              </ul>
+
+              Please review and take the necessary next steps.<br/><br/>
+
+              Thank you,<br/>
+              Mumzworld
+            </body>
+          </html>
+          `,
+      },
+    };
+
     try {
       await strapi
         .plugin("email")
@@ -109,6 +176,14 @@ module.exports = {
         .send({
           to: customer.email,
           ...body[locales || "en"],
+        });
+
+      await strapi
+        .plugin("email")
+        .service("email")
+        .send({
+          to: "services@mumzworld.com",
+          ...internalEmailBody["en"],
         });
     } catch (error) {
       console.error(error);
