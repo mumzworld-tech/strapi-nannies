@@ -23,7 +23,10 @@ module.exports = {
     );
 
     // Only send email if payment status changes to pending
-    if (paymentStatus === paymentStatusOld || paymentStatus !== "paid") {
+    if (
+      paymentStatus === paymentStatusOld ||
+      paymentStatus !== "Payment confirmed"
+    ) {
       return;
     }
 

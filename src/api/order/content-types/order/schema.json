@@ -60,12 +60,17 @@
     },
     "paymentStatus": {
       "type": "enumeration",
-      "default": "pending",
+      "default": "Pending payment",
       "enum": [
-        "pending",
-        "paid",
-        "refunded",
-        "failed"
+        "Pending payment",
+        "Payment failed",
+        "Payment confirmed",
+        "Rescheduled",
+        "Sent to vendor",
+        "Cancelled",
+        "QC/Feedback",
+        "Completed",
+        "Refunded"
       ]
     },
     "paymentId": {
