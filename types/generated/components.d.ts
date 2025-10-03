@@ -55,7 +55,12 @@ export interface ContentLocation extends Struct.ComponentSchema {
     address: Schema.Attribute.Text;
     area: Schema.Attribute.String;
     city: Schema.Attribute.String;
-    country: Schema.Attribute.Enumeration<['United Arab Emirates']>;
+    country: Schema.Attribute.Enumeration<
+      [
+        'United Arab Emirates',
+        '\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0645\u062A\u062D\u062F\u0629',
+      ]
+    >;
   };
 }
 

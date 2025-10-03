@@ -17,7 +17,8 @@
     "country": {
       "type": "enumeration",
       "enum": [
-        "United Arab Emirates"
+        "United Arab Emirates",
+        "الإمارات العربية المتحدة"
       ]
     }
   },
