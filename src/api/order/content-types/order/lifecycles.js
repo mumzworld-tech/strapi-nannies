@@ -93,8 +93,6 @@ module.exports = {
 
               We're happy to let you know that your service order #${documentId} has been successfully confirmed.<br/><br/>
 
-              We’ll be in touch shortly to guide you through the next steps and make sure everything goes smoothly.<br/><br/>
-
               We're here to support you and can't wait to make this part of your journey a little easier.<br/><br/>
 
               Warmly,<br/>
