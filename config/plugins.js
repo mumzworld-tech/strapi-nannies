@@ -13,4 +13,8 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  "export-orders": {
+    enabled: true,
+    resolve: "./src/plugins/export-orders",
+  },
 });

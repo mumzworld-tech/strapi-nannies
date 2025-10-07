@@ -1,0 +1,8 @@
+{
+  "name": "export-orders",
+  "version": "1.0.0",
+  "strapi": {
+    "name": "export-orders",
+    "description": "Export Orders Plugin"
+  }
+}
