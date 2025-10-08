@@ -53,7 +53,6 @@ module.exports = ({ strapi }) => ({
       const currency = orderData?.currencyCode || 'AED';
       const price = parseFloat(orderData?.price || 0);
       const total = parseFloat(orderData?.total || 0);
-      const paymentStatus = orderData?.paymentStatus || 'Pending';
       const invoiceDate = new Date().toLocaleDateString();
 
       // Add pink header background
@@ -138,7 +137,6 @@ module.exports = ({ strapi }) => ({
       pdf.setTextColor(0, 0, 0);
       pdf.setFontSize(11);
       pdf.setFont(undefined, 'normal');
-      pdf.text(`Payment Status: ${paymentStatus}`, 30, 195);
 
       // Footer
       pdf.setFontSize(9);
