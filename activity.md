@@ -1,5 +1,23 @@
 # Activity Log
 
+## 2025-10-08 05:57 (Dubai Time)
+- Fixed download URL in email service to include /api/ prefix: ${STRAPI_URL}/api/download-invoice/download/{documentId} for proper Strapi routing.
+
+## 2025-10-08 05:18 (Dubai Time)
+## 2025-10-08 05:18 (Dubai Time)
+- Updated email service to use STRAPI_URL environment variable for download links instead of hardcoded localhost URL, making it environment-agnostic.
+
+## 2025-10-08 05:06 (Dubai Time)
+## 2025-10-08 05:06 (Dubai Time)
+- Added download invoice link to email templates. Updated email-service.js to include a styled download button linking to http://localhost:1337/download-invoice/download/{documentId} for easy invoice access without attachments.
+
+## 2025-10-08 04:53 (Dubai Time)
+## 2025-10-08 04:53 (Dubai Time)
+- Replaced Puppeteer and Chromium with jsPDF for PDF invoice generation. Removed puppeteer and puppeteer-core dependencies from package.json. Rewrote pdf-generator.js to use jsPDF API for direct PDF creation with pink header, customer information, service details, and summary sections. Application tested successfully and loads without errors.
+
+## 2025-10-08 03:43 (Dubai Time)
+# Activity Log
+
 ## 2025-10-08 03:43 (Dubai Time)
 - Updated order lifecycles.js to use Strapi email plugin with base64 PDF attachments instead of direct AWS SES, inspired by provided example. PDFs are stored in public/invoices/ and attached as base64 encoded content.
 
