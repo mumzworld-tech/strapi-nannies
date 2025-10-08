@@ -21,6 +21,7 @@ module.exports = {
       orderId,
       paymentStatus: paymentStatusOld,
       customer,
+      documentId,
       locales = "en",
     } = currentOrder;
 
@@ -32,10 +33,12 @@ module.exports = {
       return;
     }
 
-    const documentId = orderId?.toUpperCase();
+    const orderIdUpperCase = orderId?.toUpperCase();
     const baseUrl = process.env.STRAPI_URL || 'http://localhost:1337';
-    const downloadLink = `${baseUrl}/api/download-invoice/download/${params.where.id}`;
+    const downloadLink = `${baseUrl}/download-invoice/download/${documentId}`;
+    
 
+    console.log("Payment confirmed for order:", downloadLink, documentId);
     const body = {
       ar: {
         subject: `تم تأكيد طلب خدمتك في ممز وورلد 🎉`,
@@ -44,7 +47,7 @@ module.exports = {
 
           .شكرًا لاختيارك خدمات الأمهات على ممزورلد
 
-          .يسعدنا إبلاغك بأن طلب الخدمة رقم #${documentId} قد تم تأكيده بنجاح
+          .يسعدنا إبلاغك بأن طلب الخدمة رقم #${orderId} قد تم تأكيده بنجاح
 
           .يمكنك تحميل الفاتورة من هنا: ${downloadLink}
 
@@ -80,7 +83,7 @@ module.exports = {
 
               .شكرًا لاختيارك خدمات الأمهات على ممزورلد<br/><br/>
 
-              .يسعدنا إبلاغك بأن طلب الخدمة رقم #${documentId} قد تم تأكيده بنجاح<br/><br/>
+              .يسعدنا إبلاغك بأن طلب الخدمة رقم #${orderIdUpperCase} قد تم تأكيده بنجاح<br/><br/>
 
               <a href="${downloadLink}" class="download-btn">تحميل الفاتورة</a><br/><br/>
 
@@ -101,7 +104,7 @@ module.exports = {
 
             Thank you for booking your service with Mumzworld.
 
-            We're happy to let you know that your service order #${documentId} has been successfully confirmed.
+            We're happy to let you know that your service order #${orderIdUpperCase} has been successfully confirmed.
 
             You can download your invoice here: ${downloadLink}
 
@@ -119,7 +122,7 @@ module.exports = {
 
               Thank you for booking your service with Mumzworld.<br/><br/>
 
-              We're happy to let you know that your service order #${documentId} has been successfully confirmed.<br/><br/>
+              We're happy to let you know that your service order #${orderIdUpperCase} has been successfully confirmed.<br/><br/>
 
               <a href="${downloadLink}">Download Invoice</a><br/><br/>
 

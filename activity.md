@@ -1,5 +1,11 @@
 # Activity Log
 
+## 2025-10-08 10:46 (Dubai Time)
+- Fixed email service to use orderData.id as documentId for download URL, removing fallback to orderId. Updated download controller query to use id instead of documentId for proper Strapi v4 querying.
+
+## 2025-10-08 05:57 (Dubai Time)
+# Activity Log
+
 ## 2025-10-08 05:57 (Dubai Time)
 - Fixed download URL in email service to include /api/ prefix: ${STRAPI_URL}/api/download-invoice/download/{documentId} for proper Strapi routing.
 
