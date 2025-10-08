@@ -7,12 +7,7 @@ module.exports = {
     const { paymentStatus } = params.data;
 
     // Get current entry before update
-    const {
-      orderId,
-      paymentStatus: paymentStatusOld,
-      customer,
-      locales = "en",
-    } = await strapi.entityService.findOne(
+    const currentOrder = await strapi.entityService.findOne(
       "api::order.order",
       params.where.id,
       {
@@ -21,6 +16,13 @@ module.exports = {
         },
       }
     );
+
+    const {
+      orderId,
+      paymentStatus: paymentStatusOld,
+      customer,
+      locales = "en",
+    } = currentOrder;
 
     // Only send email if payment status changes to pending
     if (
@@ -31,6 +33,8 @@ module.exports = {
     }
 
     const documentId = orderId?.toUpperCase();
+    const baseUrl = process.env.STRAPI_URL || 'http://localhost:1337';
+    const downloadLink = `${baseUrl}/api/download-invoice/download/${params.where.id}`;
 
     const body = {
       ar: {
@@ -42,6 +46,8 @@ module.exports = {
 
           .يسعدنا إبلاغك بأن طلب الخدمة رقم #${documentId} قد تم تأكيده بنجاح
 
+          .يمكنك تحميل الفاتورة من هنا: ${downloadLink}
+
           .سيتواصل معكِ فريقنا قريبًا لشرح الخطوات التالية والتأكد من أن كل شيء يسير بكل سهولة
 
           .نحن معكِ في كل خطوة، ونتطلع لأن نجعل هذه التجربة أيسر وأجمل لكِ
@@ -51,12 +57,32 @@ module.exports = {
         `.trim(),
         html: `
           <html lang="ar" dir="rtl">
+            <head>
+              <style>
+                .download-btn {
+                  display: inline-block;
+                  background-color: #e50056;
+                  color: white;
+                  padding: 12px 24px;
+                  text-decoration: none;
+                  border-radius: 5px;
+                  font-weight: bold;
+                  text-align: center;
+                  margin: 10px 0;
+                }
+                .download-btn:hover {
+                  background-color: #c4004a;
+                }
+              </style>
+            </head>
             <body style="text-align: right;">
               ،${customer.fullName} أهلًا<br/><br/>
 
               .شكرًا لاختيارك خدمات الأمهات على ممزورلد<br/><br/>
 
               .يسعدنا إبلاغك بأن طلب الخدمة رقم #${documentId} قد تم تأكيده بنجاح<br/><br/>
+
+              <a href="${downloadLink}" class="download-btn">تحميل الفاتورة</a><br/><br/>
 
               .سيتواصل معكِ فريقنا قريبًا لشرح الخطوات التالية والتأكد من أن كل شيء يسير بكل سهولة<br/><br/>
 
@@ -77,6 +103,8 @@ module.exports = {
 
             We're happy to let you know that your service order #${documentId} has been successfully confirmed.
 
+            You can download your invoice here: ${downloadLink}
+
             We'll be in touch shortly to guide you through the next steps and make sure everything goes smoothly.
 
             We're here to support you and can't wait to make this part of your journey a little easier.
@@ -92,6 +120,8 @@ module.exports = {
               Thank you for booking your service with Mumzworld.<br/><br/>
 
               We're happy to let you know that your service order #${documentId} has been successfully confirmed.<br/><br/>
+
+              <a href="${downloadLink}">Download Invoice</a><br/><br/>
 
               We're here to support you and can't wait to make this part of your journey a little easier.<br/><br/>
 
@@ -171,14 +201,35 @@ module.exports = {
     };
 
     try {
-      await strapi
-        .plugin("email")
-        .service("email")
-        .send({
-          to: customer.email,
-          ...body[locales || "en"],
-        });
+      // Generate invoice PDF
+      const pdfGenerator = strapi.plugin("download-invoice").service("pdfGenerator");
+      const pdfPath = await pdfGenerator.generateInvoice(
+        await strapi.entityService.findOne("api::order.order", params.where.id, {
+          populate: ["package", "customer", "location", "childAgeGroups", "dayOfWeek", "assignNanny"],
+        }),
+        orderId
+      );
 
+      // Read PDF buffer and convert to base64 for SES compatibility
+      const fs = require("fs-extra");
+      const pdfBuffer = await fs.readFile(pdfPath);
+      const pdfBase64 = pdfBuffer.toString('base64');
+
+      // Get complete order data for email
+      const orderData = await strapi.entityService.findOne("api::order.order", params.where.id, {
+        populate: ["package", "customer", "location", "childAgeGroups", "dayOfWeek", "assignNanny"],
+      });
+
+      // Send customer email with invoice download link using Strapi email plugin
+      await strapi.plugins.email.services.email.send({
+        to: customer.email,
+        from: process.env.EMAIL_FROM || 'noreply@mumzworld.com',
+        subject: body[locales || "en"].subject,
+        text: body[locales || "en"].text,
+        html: body[locales || "en"].html,
+      });
+
+      // Send internal team email
       await strapi
         .plugin("email")
         .service("email")
@@ -187,7 +238,7 @@ module.exports = {
           ...internalEmailBody["en"],
         });
     } catch (error) {
-      console.error(error);
+      console.error("Error sending confirmation email with invoice:", error);
     }
   },
 };

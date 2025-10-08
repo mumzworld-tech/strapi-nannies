@@ -1,0 +1,9 @@
+{
+  "name": "download-invoice",
+  "version": "1.0.0",
+  "description": "Generate and download PDF invoices for orders",
+  "strapi": {
+    "kind": "plugin",
+    "name": "download-invoice"
+  }
+}
