@@ -60,24 +60,6 @@ module.exports = {
         `.trim(),
         html: `
           <html lang="ar" dir="rtl">
-            <head>
-              <style>
-                .download-btn {
-                  display: inline-block;
-                  background-color: #e50056;
-                  color: white;
-                  padding: 12px 24px;
-                  text-decoration: none;
-                  border-radius: 5px;
-                  font-weight: bold;
-                  text-align: center;
-                  margin: 10px 0;
-                }
-                .download-btn:hover {
-                  background-color: #c4004a;
-                }
-              </style>
-            </head>
             <body style="text-align: right;">
               ،${customer.fullName} أهلًا<br/><br/>
 
@@ -85,7 +67,7 @@ module.exports = {
 
               .يسعدنا إبلاغك بأن طلب الخدمة رقم #${orderIdUpperCase} قد تم تأكيده بنجاح<br/><br/>
 
-              <a href="${downloadLink}" class="download-btn">تحميل الفاتورة</a><br/><br/>
+              <a href="${downloadLink}">تحميل الفاتورة</a><br/><br/>
 
               .سيتواصل معكِ فريقنا قريبًا لشرح الخطوات التالية والتأكد من أن كل شيء يسير بكل سهولة<br/><br/>
 
