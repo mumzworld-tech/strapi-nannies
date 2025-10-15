@@ -1,8 +1,25 @@
 import ExportOrdersButton from "./components/ExportOrdersButton";
 import DownloadInvoiceButton from "./components/DownloadInvoiceButton";
 import cssText from "./styles/date-range.css?inline";
+import AuthLogo from "./extensions/logo.svg";
+import MenuLogo from "./extensions/menu-logo.svg";
 
-const config = {};
+const config = {
+  locales: [],
+  auth: {
+    logo: AuthLogo,
+  },
+  menu: {
+    logo: MenuLogo,
+  },
+  translations: {
+    en: {
+      "app.components.LeftMenu.navbrand.title": "Mumzworld | Nannies",
+      "app.components.LeftMenu.navbrand.workplace": "Admin Panel",
+      "Auth.form.welcome.title": "Welcome to Nannies Strapi!",
+    },
+  },
+};
 
 const bootstrap = (app) => {
   try {
