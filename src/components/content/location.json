@@ -20,6 +20,12 @@
         "United Arab Emirates",
         "الإمارات العربية المتحدة"
       ]
+    },
+    "latitude": {
+      "type": "decimal"
+    },
+    "longitude": {
+      "type": "decimal"
     }
   },
   "config": {}
