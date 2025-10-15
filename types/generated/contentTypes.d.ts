@@ -877,6 +877,7 @@ export interface ApiPackagePackage extends Struct.CollectionTypeSchema {
       > &
       Schema.Attribute.DefaultTo<1>;
     publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<['day', 'week', 'month']>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
