@@ -9,6 +9,44 @@ const { createCoreController } = require("@strapi/strapi").factories;
 const { customAlphabet } = require("nanoid");
 
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
+  async search(ctx) {
+    try {
+      const { query } = ctx.request.query;
+
+      if (!query || query.trim().length < 3) {
+        return ctx.badRequest("Search query must be at least 3 characters");
+      }
+
+      const orders = await strapi.entityService.findMany("api::order.order", {
+        filters: {
+          $or: [
+            { orderId: { $containsi: query } },
+            { "customer.email": { $containsi: query } },
+            { "customer.phone": { $containsi: query } },
+          ],
+        },
+        populate: {
+          package: {
+            fields: ["title", "type"],
+          },
+        },
+        fields: ["orderId", "paymentStatus", "createdAt"],
+        limit: 50,
+      });
+
+      const results = orders.map((order) => ({
+        orderId: order.orderId,
+        packageName: order.package?.title || order.package?.type || "N/A",
+        bookingDate: order.createdAt,
+        status: order.paymentStatus,
+      }));
+
+      return { results };
+    } catch (error) {
+      console.error("Search error:", error);
+      return ctx.internalServerError("Search failed");
+    }
+  },
   async create(ctx) {
     try {
       const { fullName, email, phone, countryCode } =

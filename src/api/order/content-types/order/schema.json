@@ -9,6 +9,20 @@
   "options": {
     "draftAndPublish": true
   },
+  "indexes": [
+    {
+      "name": "order_id_index",
+      "columns": ["orderId"]
+    },
+    {
+      "name": "customer_email_index",
+      "columns": ["customer.email"]
+    },
+    {
+      "name": "customer_phone_index",
+      "columns": ["customer.phone"]
+    }
+  ],
   "pluginOptions": {},
   "attributes": {
     "orderId": {
