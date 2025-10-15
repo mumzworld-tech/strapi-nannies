@@ -1,5 +1,50 @@
 # Activity Log
 
+## 2025-10-15 06:30 (Dubai Time)
+### Added Order Search Endpoint for Bookings Search Feature
+
+**Changes Made**:
+1. **Package Schema Enhancement**:
+   - Added `title` field to package schema for better display in search results
+   - Allows package names to be shown instead of just type
+
+2. **Order Schema Optimization**:
+   - Added database indexes for `orderId`, `customer.email`, and `customer.phone`
+   - Improves search query performance significantly
+
+3. **Custom Search Controller**:
+   - Created `search` method in order controller
+   - Implements optimized search with $or filters for orderId, email, and phone
+   - Returns only non-sensitive data: orderId, packageName, bookingDate, status
+   - Validates minimum 3 character search query
+   - Limits results to 50 orders
+
+4. **Custom Route**:
+   - Added `/api/orders/search` GET endpoint
+   - Public access (auth: false) for customer self-service
+   - Uses custom search controller method
+
+**Files Modified**:
+- `src/api/package/content-types/package/schema.json` - Added title field
+- `src/api/order/content-types/order/schema.json` - Added database indexes
+- `src/api/order/controllers/order.js` - Added search method
+- `src/api/order/routes/order.js` - Added custom search route
+
+**Security**:
+- Only exposes non-sensitive order data
+- No customer personal information (name, address) exposed
+- Query validation prevents abuse
+- Result limit prevents data dumping
+
+**Performance**:
+- Database indexes on search fields
+- Optimized query with specific field selection
+- Limited populate to only required relations
+
+**Status**: ✅ Completed - Strapi backend ready for bookings search feature
+
+---
+
 ## 2025-10-08 10:46 (Dubai Time)
 - Fixed email service to use orderData.id as documentId for download URL, removing fallback to orderId. Updated download controller query to use id instead of documentId for proper Strapi v4 querying.
 
