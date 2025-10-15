@@ -20,9 +20,9 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
       const orders = await strapi.entityService.findMany("api::order.order", {
         filters: {
           $or: [
-            { orderId: { $containsi: query } },
-            { "customer.email": { $containsi: query } },
-            { "customer.phone": { $containsi: query } },
+            { orderId: { $eq: query } },
+            { "customer.email": { $eq: query } },
+            { "customer.phone": { $eq: query } },
           ],
         },
         populate: {
