@@ -61,8 +61,8 @@ export interface ContentLocation extends Struct.ComponentSchema {
         '\u0627\u0644\u0625\u0645\u0627\u0631\u0627\u062A \u0627\u0644\u0639\u0631\u0628\u064A\u0629 \u0627\u0644\u0645\u062A\u062D\u062F\u0629',
       ]
     >;
-    latitude: Schema.Attribute.Decimal;
-    longitude: Schema.Attribute.Decimal;
+    latitude: Schema.Attribute.Float;
+    longitude: Schema.Attribute.Float;
   };
 }
 
