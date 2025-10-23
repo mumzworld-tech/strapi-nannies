@@ -834,6 +834,10 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'Pending payment'>;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
+    requestStatus: Schema.Attribute.Enumeration<
+      ['pending', 'cancelled', 'completed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
     responseId: Schema.Attribute.String;
     smsConfirmationSent: Schema.Attribute.Boolean;
     time: Schema.Attribute.Time;

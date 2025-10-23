@@ -116,6 +116,15 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::nanny.nanny"
+    },
+    "requestStatus": {
+      "type": "enumeration",
+      "default": "pending",
+      "enum": [
+        "pending",
+        "cancelled",
+        "completed"
+      ]
     }
   }
 }
