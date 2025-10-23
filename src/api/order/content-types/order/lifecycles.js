@@ -120,7 +120,7 @@ module.exports = {
 
     const internalEmailBody = {
       en: {
-        subject: `New booking alert - Car Seat Cleaning`,
+        subject: `New booking alert - Nannies`,
         text: `
             Hello Team,
             A new booking has been successfully received and requires processing.
@@ -129,9 +129,9 @@ module.exports = {
 
             Booking ID: ${orderId}
 
-            Service: Car Seat Cleaning
-
+            Service: Nannies
             Customer Details:
+            
 
             Customer Name: ${customer.fullName}
 
