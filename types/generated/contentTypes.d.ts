@@ -815,7 +815,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     location: Schema.Attribute.Component<'content.location', false>;
     noOfDays: Schema.Attribute.Integer;
     noOfNannies: Schema.Attribute.Integer;
-    orderId: Schema.Attribute.String;
+    orderId: Schema.Attribute.String & Schema.Attribute.Unique;
     package: Schema.Attribute.Relation<'oneToOne', 'api::package.package'>;
     paymentId: Schema.Attribute.String;
     paymentStatus: Schema.Attribute.Enumeration<

@@ -33,15 +33,13 @@ module.exports = {
       return;
     }
 
-    const orderIdUpperCase = orderId?.toUpperCase();
-    const baseUrl = process.env.STRAPI_URL || 'http://localhost:1337';
+    const orderIdUpperCase = `#${orderId?.toUpperCase()}`;
+    const baseUrl = process.env.STRAPI_URL || "http://localhost:1337";
     const downloadLink = `${baseUrl}/download-invoice/download/${documentId}`;
-    
 
-    console.log("Payment confirmed for order:", downloadLink, documentId);
     const body = {
       ar: {
-        subject: `تم تأكيد طلب خدمتك في ممز وورلد 🎉`,
+        subject: `تم تأكيد طلب خدمتك ${orderIdUpperCase} في ممز وورلد 🎉`,
         text: `
           ،${customer.fullName} أهلًا
 
@@ -65,7 +63,7 @@ module.exports = {
 
               .شكرًا لاختيارك خدمات الأمهات على ممزورلد<br/><br/>
 
-              .يسعدنا إبلاغك بأن طلب الخدمة رقم #${orderIdUpperCase} قد تم تأكيده بنجاح<br/><br/>
+              .يسعدنا إبلاغك بأن طلب الخدمة رقم ${orderIdUpperCase} قد تم تأكيده بنجاح<br/><br/>
 
               <a href="${downloadLink}">تحميل الفاتورة</a><br/><br/>
 
@@ -80,13 +78,13 @@ module.exports = {
         `,
       },
       en: {
-        subject: `Your Mumzworld Service Order is Confirmed 🎉`,
+        subject: `Your Mumzworld Service Order ${orderIdUpperCase} is Confirmed 🎉`,
         text: `
             Dear ${customer.fullName},\n\n
 
             Thank you for booking your service with Mumzworld.
 
-            We're happy to let you know that your service order #${orderIdUpperCase} has been successfully confirmed.
+            We're happy to let you know that your service order ${orderIdUpperCase} has been successfully confirmed.
 
             You can download your invoice here: ${downloadLink}
 
@@ -104,7 +102,7 @@ module.exports = {
 
               Thank you for booking your service with Mumzworld.<br/><br/>
 
-              We're happy to let you know that your service order #${orderIdUpperCase} has been successfully confirmed.<br/><br/>
+              We're happy to let you know that your service order ${orderIdUpperCase} has been successfully confirmed.<br/><br/>
 
               <a href="${downloadLink}">Download Invoice</a><br/><br/>
 
@@ -120,7 +118,7 @@ module.exports = {
 
     const internalEmailBody = {
       en: {
-        subject: `New booking alert - Nannies`,
+        subject: `New booking alert - Babysitter - ${orderIdUpperCase}`,
         text: `
             Hello Team,
             A new booking has been successfully received and requires processing.
@@ -129,7 +127,7 @@ module.exports = {
 
             Booking ID: ${orderId}
 
-            Service: Nannies
+            Service: Babysitter
             Customer Details:
             
 
@@ -157,7 +155,7 @@ module.exports = {
                 <b>Booking ID:</b> ${orderId}
                 </li>
                 <li>
-                <b>Service:</b> Nannies
+                <b>Service:</b> Babysitter
                 </li>
               </ul>
 
@@ -187,28 +185,52 @@ module.exports = {
 
     try {
       // Generate invoice PDF
-      const pdfGenerator = strapi.plugin("download-invoice").service("pdfGenerator");
+      const pdfGenerator = strapi
+        .plugin("download-invoice")
+        .service("pdfGenerator");
       const pdfPath = await pdfGenerator.generateInvoice(
-        await strapi.entityService.findOne("api::order.order", params.where.id, {
-          populate: ["package", "customer", "location", "childAgeGroups", "dayOfWeek", "assignNanny"],
-        }),
+        await strapi.entityService.findOne(
+          "api::order.order",
+          params.where.id,
+          {
+            populate: [
+              "package",
+              "customer",
+              "location",
+              "childAgeGroups",
+              "dayOfWeek",
+              "assignNanny",
+            ],
+          }
+        ),
         orderId
       );
 
       // Read PDF buffer and convert to base64 for SES compatibility
       const fs = require("fs-extra");
       const pdfBuffer = await fs.readFile(pdfPath);
-      const pdfBase64 = pdfBuffer.toString('base64');
+      const pdfBase64 = pdfBuffer.toString("base64");
 
       // Get complete order data for email
-      const orderData = await strapi.entityService.findOne("api::order.order", params.where.id, {
-        populate: ["package", "customer", "location", "childAgeGroups", "dayOfWeek", "assignNanny"],
-      });
+      const orderData = await strapi.entityService.findOne(
+        "api::order.order",
+        params.where.id,
+        {
+          populate: [
+            "package",
+            "customer",
+            "location",
+            "childAgeGroups",
+            "dayOfWeek",
+            "assignNanny",
+          ],
+        }
+      );
 
       // Send customer email with invoice download link using Strapi email plugin
       await strapi.plugins.email.services.email.send({
         to: customer.email,
-        from: process.env.EMAIL_FROM || 'noreply@mumzworld.com',
+        from: process.env.EMAIL_FROM || "noreply@mumzworld.com",
         subject: body[locales || "en"].subject,
         text: body[locales || "en"].text,
         html: body[locales || "en"].html,

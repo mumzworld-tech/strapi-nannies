@@ -6,8 +6,6 @@
 
 const { createCoreController } = require("@strapi/strapi").factories;
 
-const { customAlphabet } = require("nanoid");
-
 module.exports = createCoreController("api::order.order", ({ strapi }) => ({
   async search(ctx) {
     try {
@@ -58,33 +56,70 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
         countryCode,
       });
 
-      const orderId = customAlphabet("1234567890abcdef", 10)();
-
       const { customer, ...rest } = ctx.request.body.data;
 
-      const data = await strapi.entityService.create("api::order.order", {
-        data: {
-          customerId: customerDetails.documentId,
-          customer: {
-            fullName: customerDetails.fullName,
-            email: customerDetails.email,
-            phone: customerDetails.phone,
-            countryCode: customerDetails.countryCode,
-          },
-          orderId,
-          ...rest,
-          dayOfWeek: rest.dayOfWeek.map((day) => ({
-            label: day,
-          })),
-          childAgeGroups: rest.childAgeGroups.map((child) => ({
-            label: child,
-          })),
-        },
-      });
+      // Generate order ID with retry logic
+      const generateUniqueOrderId = async (attempts = 0) => {
+        if (attempts > 3) {
+          throw new Error(
+            "Failed to generate unique order ID after 3 attempts"
+          );
+        }
 
-      return {
-        data,
+        // Using findOne in Strapi v5
+        const lastOrder = await strapi.entityService.findMany(
+          "api::order.order",
+          {
+            sort: { id: "desc" },
+            fields: ["orderId"],
+            limit: 1,
+          }
+        );
+
+        let orderId;
+        if (lastOrder.length > 0 && lastOrder[0].orderId?.startsWith("BS-")) {
+          const lastOrderId = lastOrder[0].orderId.split("-")[1];
+          orderId = `BS-${parseInt(lastOrderId) + 1}`;
+        } else {
+          orderId = `BS-915100`;
+        }
+
+        try {
+          const data = await strapi.entityService.create("api::order.order", {
+            data: {
+              customerId: customerDetails.documentId,
+              customer: {
+                fullName: customerDetails.fullName,
+                email: customerDetails.email,
+                phone: customerDetails.phone,
+                countryCode: customerDetails.countryCode,
+              },
+              orderId,
+              ...rest,
+              dayOfWeek: rest.dayOfWeek?.map((day) => ({
+                label: day,
+              })),
+              childAgeGroups: rest.childAgeGroups?.map((child) => ({
+                label: child,
+              })),
+            },
+          });
+          return data;
+        } catch (error) {
+          if (
+            error.message.includes("unique") ||
+            error.message.includes("duplicate")
+          ) {
+            // Retry with new ID
+            return await generateUniqueOrderId(attempts + 1);
+          }
+          throw error;
+        }
       };
+
+      const data = await generateUniqueOrderId();
+
+      return { data };
     } catch (error) {
       console.error("Error creating order:", error);
       ctx.throw(500, "Failed to create order");
@@ -165,5 +200,27 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
       console.error("Error in getCustomerDetails:", error);
       throw error;
     }
+  },
+  async getLastOrderId() {
+    const orders = await strapi.entityService.findMany("api::order.order", {
+      sort: ["id:desc"],
+      limit: 1,
+      filters: {
+        orderId: {
+          $ne: null,
+        },
+      },
+    });
+    return orders[0].orderId;
+  },
+  async checkOrderIdExists(orderId) {
+    const order = await strapi.entityService.findOne("api::order.order", {
+      filters: {
+        orderId: {
+          $eq: orderId,
+        },
+      },
+    });
+    return order;
   },
 }));
