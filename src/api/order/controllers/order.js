@@ -201,26 +201,4 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
       throw error;
     }
   },
-  async getLastOrderId() {
-    const orders = await strapi.entityService.findMany("api::order.order", {
-      sort: ["id:desc"],
-      limit: 1,
-      filters: {
-        orderId: {
-          $ne: null,
-        },
-      },
-    });
-    return orders[0].orderId;
-  },
-  async checkOrderIdExists(orderId) {
-    const order = await strapi.entityService.findOne("api::order.order", {
-      filters: {
-        orderId: {
-          $eq: orderId,
-        },
-      },
-    });
-    return order;
-  },
 }));
