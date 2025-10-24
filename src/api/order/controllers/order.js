@@ -70,8 +70,12 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
         const lastOrder = await strapi.entityService.findMany(
           "api::order.order",
           {
-            sort: { id: "desc" },
-            fields: ["orderId"],
+            where: {
+              orderId: {
+                $startsWith: "BS-",
+              },
+            },
+            sort: { orderId: "desc" },
             limit: 1,
           }
         );
