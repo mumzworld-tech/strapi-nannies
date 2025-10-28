@@ -51,7 +51,7 @@
     "time": {
       "type": "time"
     },
-    "noOfNannies": {
+    "noOfChildren": {
       "type": "integer"
     },
     "price": {
@@ -127,6 +127,9 @@
         "cancelled",
         "completed"
       ]
+    },
+    "specialInstructions": {
+      "type": "text"
     }
   }
 }

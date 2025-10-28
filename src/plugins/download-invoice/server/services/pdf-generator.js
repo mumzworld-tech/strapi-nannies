@@ -41,48 +41,50 @@ module.exports = ({ strapi }) => ({
       const pdf = new jsPDF();
 
       // Extract and format data (matching the original example)
-      const customerName = orderData?.customer?.fullName || 'N/A';
-      const customerEmail = orderData?.customer?.email || 'N/A';
-      const customerPhone = `${orderData?.customer?.countryCode || ''} ${orderData?.customer?.phone || ''}`.trim() || 'N/A';
-      const customerAddress = orderData?.location?.address || 'N/A';
-      const customerCity = orderData?.location?.city || 'N/A';
-      const packageType = orderData?.package?.type || 'N/A';
+      const customerName = orderData?.customer?.fullName || "N/A";
+      const customerEmail = orderData?.customer?.email || "N/A";
+      const customerPhone =
+        `${orderData?.customer?.countryCode || ""} ${orderData?.customer?.phone || ""}`.trim() ||
+        "N/A";
+      const customerAddress = orderData?.location?.address || "N/A";
+      const customerCity = orderData?.location?.city || "N/A";
+      const packageType = orderData?.package?.type || "N/A";
       const serviceDate = this.formatDate(orderData?.date);
-      const serviceTime = orderData?.time || 'N/A';
+      const serviceTime = orderData?.time || "N/A";
       const serviceHours = orderData?.hours || 0;
-      const currency = orderData?.currencyCode || 'AED';
+      const currency = orderData?.currencyCode || "AED";
       const price = parseFloat(orderData?.price || 0);
       const total = parseFloat(orderData?.total || 0);
       const invoiceDate = new Date().toLocaleDateString();
 
       // Add pink header background
       pdf.setFillColor(233, 30, 99);
-      pdf.rect(0, 0, 210, 40, 'F');
+      pdf.rect(0, 0, 210, 40, "F");
 
       // Add logo text (MUMZWORLD)
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(24);
-      pdf.setFont(undefined, 'bold');
-      pdf.text('MUMZWORLD', 20, 25);
+      pdf.setFont(undefined, "bold");
+      pdf.text("MUMZWORLD", 20, 25);
 
       // Invoice title
       pdf.setFontSize(28);
-      pdf.text('INVOICE', 150, 25);
+      pdf.text("INVOICE", 150, 25);
 
       // Reset text color
       pdf.setTextColor(0, 0, 0);
 
       // Order ID and Date
       pdf.setFontSize(10);
-      pdf.setFont(undefined, 'normal');
+      pdf.setFont(undefined, "normal");
       pdf.text(`Order ID: ${orderId}`, 20, 50);
       pdf.text(`Date: ${invoiceDate}`, 20, 56);
 
       // Section: Customer Information
       pdf.setFontSize(14);
-      pdf.setFont(undefined, 'bold');
+      pdf.setFont(undefined, "bold");
       pdf.setTextColor(233, 30, 99);
-      pdf.text('Customer Information', 20, 70);
+      pdf.text("Customer Information", 20, 70);
 
       // Draw line under section title
       pdf.setDrawColor(233, 30, 99);
@@ -90,7 +92,7 @@ module.exports = ({ strapi }) => ({
       pdf.line(20, 72, 190, 72);
 
       pdf.setFontSize(10);
-      pdf.setFont(undefined, 'normal');
+      pdf.setFont(undefined, "normal");
       pdf.setTextColor(0, 0, 0);
 
       pdf.text(`Customer: ${customerName}`, 20, 82);
@@ -100,15 +102,15 @@ module.exports = ({ strapi }) => ({
 
       // Section: Service Details
       pdf.setFontSize(14);
-      pdf.setFont(undefined, 'bold');
+      pdf.setFont(undefined, "bold");
       pdf.setTextColor(233, 30, 99);
-      pdf.text('Service Details', 20, 115);
+      pdf.text("Service Details", 20, 115);
 
       pdf.setDrawColor(233, 30, 99);
       pdf.line(20, 117, 190, 117);
 
       pdf.setFontSize(10);
-      pdf.setFont(undefined, 'normal');
+      pdf.setFont(undefined, "normal");
       pdf.setTextColor(0, 0, 0);
 
       pdf.text(`Package: ${packageType}`, 20, 127);
@@ -118,7 +120,7 @@ module.exports = ({ strapi }) => ({
 
       // Summary box
       pdf.setFillColor(249, 249, 249);
-      pdf.rect(20, 160, 170, 40, 'F');
+      pdf.rect(20, 160, 170, 40, "F");
 
       pdf.setFontSize(11);
       pdf.text(`Service Price:`, 30, 172);
@@ -126,26 +128,31 @@ module.exports = ({ strapi }) => ({
 
       // Total with pink background
       pdf.setFillColor(233, 30, 99);
-      pdf.rect(20, 178, 170, 10, 'F');
+      pdf.rect(20, 178, 170, 10, "F");
 
-      pdf.setFont(undefined, 'bold');
+      pdf.setFont(undefined, "bold");
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(14);
-      pdf.text('Total Amount:', 30, 185);
+      pdf.text("Total Amount:", 30, 185);
       pdf.text(`${currency} ${total.toFixed(2)}`, 160, 185);
 
       pdf.setTextColor(0, 0, 0);
       pdf.setFontSize(11);
-      pdf.setFont(undefined, 'normal');
+      pdf.setFont(undefined, "normal");
 
       // Footer
       pdf.setFontSize(9);
       pdf.setTextColor(100, 100, 100);
-      pdf.text('mumzworld.com - The Biggest Online Baby Shop in the Middle East', 105, 270, { align: 'center' });
-      pdf.text('Thank you for your business!', 105, 276, { align: 'center' });
+      pdf.text(
+        "mumzworld.com - The Biggest Online Baby Shop in the Middle East",
+        105,
+        270,
+        { align: "center" }
+      );
+      pdf.text("Thank you for your business!", 105, 276, { align: "center" });
 
       // Save PDF
-      const pdfBuffer = pdf.output('arraybuffer');
+      const pdfBuffer = pdf.output("arraybuffer");
       await fs.writeFile(pdfPath, Buffer.from(pdfBuffer));
 
       strapi.log.info(`Invoice generated successfully for order ${orderId}`);
@@ -158,11 +165,13 @@ module.exports = ({ strapi }) => ({
 
       return pdfPath;
     } catch (error) {
-      strapi.log.error(`Failed to generate invoice for order ${orderId}:`, error);
+      strapi.log.error(
+        `Failed to generate invoice for order ${orderId}:`,
+        error
+      );
       throw error;
     }
   },
-
 
   /**
    * Prepare order data for invoice
@@ -196,7 +205,9 @@ module.exports = ({ strapi }) => ({
       customer: {
         name: orderData.customer?.fullName || "N/A",
         email: orderData.customer?.email || "N/A",
-        phone: `${orderData.customer?.countryCode || ""} ${orderData.customer?.phone || ""}`.trim() || "N/A",
+        phone:
+          `${orderData.customer?.countryCode || ""} ${orderData.customer?.phone || ""}`.trim() ||
+          "N/A",
       },
       location: {
         address: orderData.location?.address || "N/A",
@@ -214,7 +225,7 @@ module.exports = ({ strapi }) => ({
         hours: orderData.hours || 0,
         type: orderData.type || "N/A",
         noOfDays: orderData.noOfDays || 0,
-        noOfNannies: orderData.noOfNannies || 1,
+        noOfChildren: orderData.noOfChildren || 1,
       },
       pricing: {
         price: formatCurrency(orderData.price, orderData.currencyCode),
@@ -226,7 +237,8 @@ module.exports = ({ strapi }) => ({
         id: orderData.paymentId || "N/A",
         responseId: orderData.responseId || "N/A",
       },
-      childAgeGroups: orderData.childAgeGroups?.map((g) => g.name).join(", ") || "N/A",
+      childAgeGroups:
+        orderData.childAgeGroups?.map((g) => g.name).join(", ") || "N/A",
       dayOfWeek: orderData.dayOfWeek?.map((d) => d.name).join(", ") || "N/A",
       locale: orderData.locales || "en",
     };
@@ -252,4 +264,3 @@ module.exports = ({ strapi }) => ({
     return path.join(process.cwd(), "public", "invoices", `${orderId}.pdf`);
   },
 });
-

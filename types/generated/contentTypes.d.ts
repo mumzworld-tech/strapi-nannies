@@ -813,8 +813,8 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
     location: Schema.Attribute.Component<'content.location', false>;
+    noOfChildren: Schema.Attribute.Integer;
     noOfDays: Schema.Attribute.Integer;
-    noOfNannies: Schema.Attribute.Integer;
     orderId: Schema.Attribute.String & Schema.Attribute.Unique;
     package: Schema.Attribute.Relation<'oneToOne', 'api::package.package'>;
     paymentId: Schema.Attribute.String;
@@ -840,6 +840,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'pending'>;
     responseId: Schema.Attribute.String;
     smsConfirmationSent: Schema.Attribute.Boolean;
+    specialInstructions: Schema.Attribute.Text;
     time: Schema.Attribute.Time;
     total: Schema.Attribute.Decimal;
     type: Schema.Attribute.Enumeration<['day', 'week', 'month']>;
