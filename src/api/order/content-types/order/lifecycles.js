@@ -28,12 +28,91 @@ module.exports = {
     // Only send email if payment status changes to pending
     if (
       paymentStatus === paymentStatusOld ||
-      paymentStatus !== "Payment confirmed"
+      !["Payment confirmed", "Payment failed"].includes(paymentStatus)
     ) {
       return;
     }
 
     const orderIdUpperCase = `#${orderId?.toUpperCase()}`;
+
+    if (paymentStatus === "Payment failed") {
+      const internalEmailBody = {
+        en: {
+          subject: `Payment failed - Babysitter - ${orderIdUpperCase}`,
+          text: `
+              Hello Team,
+              Payment failed for booking ${orderIdUpperCase}.
+  
+              Booking Details:
+  
+              Booking ID: ${orderId}
+  
+              Service: Babysitter
+              Customer Details:
+              
+  
+              Customer Name: ${customer.fullName}
+  
+              Customer Email: ${customer.email}
+  
+              Customer Phone: ${customer.Phone}
+  
+              Please review and take the necessary next steps.
+  
+              Thank you,
+  
+              Mumzworld
+            `.trim(),
+          html: `
+            <html>
+              <body>
+                Hello Team,<br/><br/>
+                Payment failed for booking ${orderIdUpperCase}.<br/><br/>
+  
+                <b>Booking Details:</b>
+                <ul>
+                  <li>
+                  <b>Booking ID:</b> ${orderId}
+                  </li>
+                  <li>
+                  <b>Service:</b> Babysitter
+                  </li>
+                </ul>
+  
+                <b>Customer Details:</b>
+  
+                <ul>
+                  <li>
+                    <b>Customer Name:</b> ${customer.fullName}
+                  </li>
+                  <li>
+                    <b>Customer Email:</b> ${customer.email}
+                  </li>
+                  <li>
+                    <b>Customer Phone:</b> ${customer.countryCode}${customer.phone}
+                  </li>
+                </ul>
+  
+                Please review and take the necessary next steps.<br/><br/>
+  
+                Thank you,<br/>
+                Mumzworld
+              </body>
+            </html>
+            `,
+        },
+      };
+      // Send internal team email
+      await strapi
+        .plugin("email")
+        .service("email")
+        .send({
+          to: "services@mumzworld.com",
+          ...internalEmailBody["en"],
+        });
+      return;
+    }
+
     const baseUrl = process.env.STRAPI_URL || "http://localhost:1337";
     const downloadLink = `${baseUrl}/download-invoice/download/${documentId}`;
 
