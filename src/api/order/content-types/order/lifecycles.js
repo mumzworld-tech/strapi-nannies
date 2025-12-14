@@ -1,15 +1,6 @@
 // path: src/api/service-request/content-types/service-request/lifecycles.js
 
 module.exports = {
-  async beforeCreate(event) {
-    const { params } = event;
-
-    // If discountedPrice exists, set price and total to discountedPrice
-    if (params.data.discountedPrice !== undefined && params.data.discountedPrice !== null) {
-      params.data.price = params.data.discountedPrice;
-      params.data.total = params.data.discountedPrice;
-    }
-  },
 
   async beforeUpdate(event) {
     const { params } = event;
