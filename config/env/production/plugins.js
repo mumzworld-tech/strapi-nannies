@@ -13,4 +13,8 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  coupon: {
+    enabled: true,
+    resolve: "./node_modules/mumz-strapi-plugin-coupon",
+  },
 });

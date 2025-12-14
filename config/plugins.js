@@ -21,4 +21,8 @@ module.exports = ({ env }) => ({
     enabled: true,
     resolve: "./src/plugins/download-invoice",
   },
+  coupon: {
+    enabled: true,
+    resolve: "./node_modules/mumz-strapi-plugin-coupon",
+  },
 });

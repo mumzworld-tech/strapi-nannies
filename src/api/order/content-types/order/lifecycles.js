@@ -1,6 +1,16 @@
 // path: src/api/service-request/content-types/service-request/lifecycles.js
 
 module.exports = {
+  async beforeCreate(event) {
+    const { params } = event;
+
+    // If discountedPrice exists, set price and total to discountedPrice
+    if (params.data.discountedPrice !== undefined && params.data.discountedPrice !== null) {
+      params.data.price = params.data.discountedPrice;
+      params.data.total = params.data.discountedPrice;
+    }
+  },
+
   async beforeUpdate(event) {
     const { params } = event;
 
@@ -115,6 +125,34 @@ module.exports = {
 
     const baseUrl = process.env.STRAPI_URL || "http://localhost:1337";
     const downloadLink = `${baseUrl}/download-invoice/download/${documentId}`;
+
+    // Redeem coupon if couponCode exists
+    if (currentOrder.couponCode) {
+      try {
+        const couponService = strapi.plugin("coupon").service("coupon");
+        const redeemResult = await couponService.redeem({
+          couponCode: currentOrder.couponCode,
+          phoneNumber: `${customer.countryCode || ""}${customer.phone}`,
+          orderId: currentOrder.orderId,
+          orderAmount: parseFloat(currentOrder.price) || 0,
+        });
+
+        if (redeemResult.success) {
+          strapi.log.info(
+            `Coupon ${currentOrder.couponCode} redeemed for order ${currentOrder.orderId}`
+          );
+        } else {
+          strapi.log.warn(
+            `Failed to redeem coupon ${currentOrder.couponCode} for order ${currentOrder.orderId}: ${redeemResult.message}`
+          );
+        }
+      } catch (couponError) {
+        strapi.log.error(
+          `Error redeeming coupon for order ${currentOrder.orderId}:`,
+          couponError
+        );
+      }
+    }
 
     const body = {
       ar: {

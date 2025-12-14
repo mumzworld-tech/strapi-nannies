@@ -130,6 +130,15 @@
     },
     "specialInstructions": {
       "type": "text"
+    },
+    "originalPrice": {
+      "type": "decimal"
+    },
+    "couponCode": {
+      "type": "string"
+    },
+    "discountedPrice": {
+      "type": "decimal"
     }
   }
 }
