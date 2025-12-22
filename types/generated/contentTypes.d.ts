@@ -798,6 +798,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   attributes: {
     assignNanny: Schema.Attribute.Relation<'oneToOne', 'api::nanny.nanny'>;
     childAgeGroups: Schema.Attribute.Component<'content.list', true>;
+    couponCode: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -806,6 +807,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     customerId: Schema.Attribute.Relation<'oneToOne', 'api::customer.customer'>;
     date: Schema.Attribute.Date;
     dayOfWeek: Schema.Attribute.Component<'content.list', true>;
+    discountedPrice: Schema.Attribute.Decimal;
     hours: Schema.Attribute.Integer;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     locales: Schema.Attribute.Enumeration<['en', 'ar']> &
@@ -816,6 +818,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     noOfChildren: Schema.Attribute.Integer;
     noOfDays: Schema.Attribute.Integer;
     orderId: Schema.Attribute.String & Schema.Attribute.Unique;
+    originalPrice: Schema.Attribute.Decimal;
     package: Schema.Attribute.Relation<'oneToOne', 'api::package.package'>;
     paymentId: Schema.Attribute.String;
     paymentStatus: Schema.Attribute.Enumeration<
@@ -977,6 +980,133 @@ export interface PluginContentReleasesReleaseAction
     >;
     type: Schema.Attribute.Enumeration<['publish', 'unpublish']> &
       Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface PluginCouponCoupon extends Struct.CollectionTypeSchema {
+  collectionName: 'coupons';
+  info: {
+    description: 'Coupon management for discounts and promotions';
+    displayName: 'Coupon';
+    pluralName: 'coupons';
+    singularName: 'coupon';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    'content-type-builder': {
+      visible: true;
+    };
+  };
+  attributes: {
+    code: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currentUsage: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<0>;
+    description: Schema.Attribute.Text;
+    discountType: Schema.Attribute.Enumeration<['percentage', 'flat']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'percentage'>;
+    discountValue: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    isActive: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'plugin::coupon.coupon'
+    > &
+      Schema.Attribute.Private;
+    maxUsage: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    maxUsagePerUser: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    publishedAt: Schema.Attribute.DateTime;
+    redemptions: Schema.Attribute.Relation<
+      'oneToMany',
+      'plugin::coupon.redemption'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    userRestrictions: Schema.Attribute.JSON;
+    validFrom: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    validTo: Schema.Attribute.DateTime & Schema.Attribute.Required;
+  };
+}
+
+export interface PluginCouponRedemption extends Struct.CollectionTypeSchema {
+  collectionName: 'coupon_redemptions';
+  info: {
+    description: 'Tracks coupon redemptions for audit trail';
+    displayName: 'Coupon Redemption';
+    pluralName: 'redemptions';
+    singularName: 'redemption';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: true;
+    };
+    'content-type-builder': {
+      visible: true;
+    };
+  };
+  attributes: {
+    coupon: Schema.Attribute.Relation<'manyToOne', 'plugin::coupon.coupon'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    discountType: Schema.Attribute.String & Schema.Attribute.Required;
+    discountValue: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'plugin::coupon.redemption'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    orderId: Schema.Attribute.String & Schema.Attribute.Required;
+    phoneNumber: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    redemptionDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1411,6 +1541,8 @@ declare module '@strapi/strapi' {
       'api::package.package': ApiPackagePackage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
+      'plugin::coupon.coupon': PluginCouponCoupon;
+      'plugin::coupon.redemption': PluginCouponRedemption;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::review-workflows.workflow': PluginReviewWorkflowsWorkflow;
       'plugin::review-workflows.workflow-stage': PluginReviewWorkflowsWorkflowStage;
