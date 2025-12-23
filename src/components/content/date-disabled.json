@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_content_date_disableds",
+  "info": {
+    "displayName": "DateDisabled"
+  },
+  "options": {},
+  "attributes": {
+    "date": {
+      "type": "date"
+    }
+  },
+  "config": {}
+}

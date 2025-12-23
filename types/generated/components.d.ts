@@ -24,6 +24,16 @@ export interface ContentCustomer extends Struct.ComponentSchema {
   };
 }
 
+export interface ContentDateDisabled extends Struct.ComponentSchema {
+  collectionName: 'components_content_date_disableds';
+  info: {
+    displayName: 'DateDisabled';
+  };
+  attributes: {
+    date: Schema.Attribute.Date;
+  };
+}
+
 export interface ContentGallery extends Struct.ComponentSchema {
   collectionName: 'components_content_galleries';
   info: {
@@ -131,6 +141,7 @@ declare module '@strapi/strapi' {
     export interface ComponentSchemas {
       'content.checked-list': ContentCheckedList;
       'content.customer': ContentCustomer;
+      'content.date-disabled': ContentDateDisabled;
       'content.gallery': ContentGallery;
       'content.list': ContentList;
       'content.location': ContentLocation;

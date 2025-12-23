@@ -27,6 +27,11 @@
       "type": "integer",
       "required": true,
       "default": 2
+    },
+    "datesDisabled": {
+      "type": "component",
+      "component": "content.date-disabled",
+      "repeatable": true
     }
   }
 }
